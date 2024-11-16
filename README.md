@@ -17,14 +17,14 @@ A **new Flutter project** designed to create an engaging and dynamic chat experi
 ## **Live Statistics**
 
 ### **Languages Used**
-![Languages](https://img.shields.io/github/languages/top/ahammednibras8/flutter-chat-app)
+![Top Langs](https://github-readme-stats.vercel.app/api/top-langs/?username=ahammednibras8&repo=flutter-chat-app&theme=dark)
 
 ### **Contributors**
-![Contributors](https://img.shields.io/github/contributors/ahammednibras8/flutter-chat-app)
+[![Ahammed Nibras github activity graph](https://github-readme-activity-graph.vercel.app/graph?username=ahammednibras8&repo=flutter-chat-app&theme=github-compact)](https://github.com/ahammednibras8/flutter-chat-app)
 
-### **Commit Activity**
+<!-- ### **Commit Activity**
 ![Commit Calendar](https://github.com/ahammednibras8/flutter-chat-app/graphs/commit-activity)
-
+-->
 ---
 
 ## **Features**
