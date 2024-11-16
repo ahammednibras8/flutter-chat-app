@@ -23,5 +23,12 @@ class AppTypography {
     fontFamily: _fontFamily,
     fontSize: 14,
     fontWeight: FontWeight.w600,
+    height: 1.71,
+  );
+
+  static const TextStyle body2 = TextStyle(
+    fontFamily: _fontFamily,
+    fontSize: 14,
+    height: 1.71,
   );
 }

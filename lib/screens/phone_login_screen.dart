@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_chat_app/widgets/login_info_text.dart';
 import 'package:flutter_chat_app/widgets/my_appbar.dart';
 
 class PhoneLoginScreen extends StatelessWidget {
@@ -11,7 +12,19 @@ class PhoneLoginScreen extends StatelessWidget {
         leadingIcon: Icon(Icons.arrow_back_ios_new_rounded),
       ),
       body: Center(
-        child: Text('Phone Login Screen'),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 32),
+              child: LoginInfoText(
+                title: "Enter Your Phone Number",
+                subtitle:
+                    "Please confirm your country code and enter your phone number",
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
