@@ -140,4 +140,4 @@ This project is licensed under the MIT License. -->
 
 ## **About the Developer**
 
-Made with ❤️ by [Ahammed Nibras](https://github.com/ahammednibras81).
+Made with ❤️ by [Ahammed Nibras](https://github.com/ahammednibras8).
