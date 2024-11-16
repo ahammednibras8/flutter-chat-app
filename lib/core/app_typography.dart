@@ -4,6 +4,12 @@ class AppTypography {
   static const _fontFamily = 'Mulish';
 
   //Headings
+  static const TextStyle heading1 = TextStyle(
+    fontFamily: _fontFamily,
+    fontSize: 32,
+    fontWeight: FontWeight.bold,
+  );
+
   static const TextStyle heading2 = TextStyle(
     fontFamily: _fontFamily,
     fontSize: 24,

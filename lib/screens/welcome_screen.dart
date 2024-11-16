@@ -33,7 +33,7 @@ class WelcomeScreen extends StatelessWidget {
               GestureDetector(
                 onTap: () async {
                   final Uri url =
-                      Uri.parse('https://github.com/ahammednibras81');
+                      Uri.parse('https://github.com/ahammednibras8');
 
                   if (!await launchUrl(url)) {
                     throw Exception('Could not launch $url');
