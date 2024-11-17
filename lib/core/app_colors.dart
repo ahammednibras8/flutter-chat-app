@@ -11,4 +11,12 @@ class AppColors {
 
   //Accent
   static const Color danger = Color(0xffE94242);
+
+  //Gradients
+  static const LinearGradient style1 = LinearGradient(
+    colors: [
+      Color(0xffD2D5F9),
+      Color(0xff2C37E1),
+    ],
+  );
 }

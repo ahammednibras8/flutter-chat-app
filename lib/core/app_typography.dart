@@ -44,4 +44,11 @@ class AppTypography {
     fontSize: 14,
     height: 1.71,
   );
+
+  //Metadata
+  static const TextStyle metadata2 = TextStyle(
+    fontFamily: _fontFamily,
+    fontSize: 10,
+    height: 0.62,
+  );
 }

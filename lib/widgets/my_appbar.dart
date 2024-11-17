@@ -3,9 +3,18 @@ import 'package:flutter_chat_app/core/app_colors.dart';
 import 'package:flutter_chat_app/core/app_typography.dart';
 
 class MyAppbar extends StatelessWidget implements PreferredSizeWidget {
-  final Icon leadingIcon;
+  final Icon? leadingIcon;
   final String? title;
-  const MyAppbar({super.key, required this.leadingIcon, this.title});
+  final VoidCallback? onLeadingPressed;
+  final List<Widget>? actions;
+
+  const MyAppbar({
+    super.key,
+    this.leadingIcon,
+    this.title,
+    this.onLeadingPressed,
+    this.actions,
+  });
 
   @override
   final Size preferredSize = const Size.fromHeight(60);
@@ -16,11 +25,13 @@ class MyAppbar extends StatelessWidget implements PreferredSizeWidget {
       padding: const EdgeInsets.only(top: 25),
       child: AppBar(
         automaticallyImplyLeading: false,
-        titleSpacing: 0,
-        leading: IconButton(
-          icon: leadingIcon,
-          onPressed: () => Navigator.pop(context),
-        ),
+        titleSpacing: leadingIcon != null ? 0 : 16,
+        leading: leadingIcon != null
+            ? IconButton(
+                icon: leadingIcon!,
+                onPressed: onLeadingPressed ?? () => Navigator.pop(context),
+              )
+            : null,
         title: title != null
             ? Align(
                 alignment: Alignment.centerLeft,
@@ -31,6 +42,12 @@ class MyAppbar extends StatelessWidget implements PreferredSizeWidget {
                   ),
                 ),
               )
+            : null,
+        actions: actions != null
+            ? [
+                ...actions!,
+                const SizedBox(width: 8),
+              ]
             : null,
       ),
     );

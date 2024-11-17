@@ -37,7 +37,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 MyButton(
                   text: 'Save',
                   onPressed: () {
-                    Navigator.push(
+                    Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(
                         builder: (context) => const ChatScreen(),
