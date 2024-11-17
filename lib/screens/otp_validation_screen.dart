@@ -99,7 +99,7 @@ class OtpInputField extends StatelessWidget {
           color: AppColors.active,
         ),
         decoration: InputDecoration(
-          contentPadding: EdgeInsets.symmetric(vertical: 8),
+          contentPadding: const EdgeInsets.symmetric(vertical: 8),
           counterText: '',
           filled: true,
           fillColor: AppColors.offWhite,

@@ -17,6 +17,13 @@ class AppTypography {
   );
 
   //Subheading
+  static const TextStyle subheading1 = TextStyle(
+    fontFamily: _fontFamily,
+    fontSize: 18,
+    fontWeight: FontWeight.w600,
+    height: 0.6,
+  );
+
   static const TextStyle subheading2 = TextStyle(
     fontFamily: _fontFamily,
     fontSize: 16,
