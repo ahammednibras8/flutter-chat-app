@@ -5,6 +5,7 @@ class AppTheme {
   static ThemeData get lightTheme {
     return ThemeData(
       scaffoldBackgroundColor: Colors.white,
+      splashColor: Colors.transparent,
       appBarTheme: const AppBarTheme(
         backgroundColor: Color.fromRGBO(0, 0, 0, 0),
       ),
@@ -30,6 +31,16 @@ class AppTheme {
             color: Colors.black,
           ),
         ),
+      ),
+      bottomNavigationBarTheme: const BottomNavigationBarThemeData(
+        backgroundColor: AppColors.white,
+        selectedItemColor: AppColors.active,
+        elevation: 0,
+        unselectedItemColor: AppColors.disabled,
+        showSelectedLabels: false,
+        showUnselectedLabels: false,
+        type: BottomNavigationBarType.fixed,
+        enableFeedback: true,
       ),
     );
   }
