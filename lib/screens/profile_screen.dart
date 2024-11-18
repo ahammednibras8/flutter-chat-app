@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_chat_app/screens/chat_screen.dart';
+import 'package:flutter_chat_app/screens/chat_home_screen.dart';
 import 'package:flutter_chat_app/widgets/my_appbar.dart';
 import 'package:flutter_chat_app/widgets/my_button.dart';
 import 'package:flutter_chat_app/widgets/my_text_field.dart';
@@ -40,7 +40,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => const ChatScreen(),
+                        builder: (context) => const ChatHomeScreen(),
                       ),
                     );
                   },
