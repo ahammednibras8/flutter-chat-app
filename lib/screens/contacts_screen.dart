@@ -35,7 +35,7 @@ class ContactsScreen extends StatelessWidget {
                   return const ChatWidget();
                 },
               ),
-            )
+            ),
           ],
         ));
   }

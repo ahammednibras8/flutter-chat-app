@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_chat_app/core/app_colors.dart';
-import 'package:flutter_chat_app/core/app_typography.dart';
+// import 'package:flutter_chat_app/core/app_typography.dart';
 
 class MyBottomNavigation extends StatelessWidget {
   final int currentIndex;
