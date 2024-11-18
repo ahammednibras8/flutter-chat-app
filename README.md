@@ -25,7 +25,6 @@ A **new Flutter project** designed to create an engaging and dynamic chat experi
 <!-- ### **Commit Activity**
 ![Commit Calendar](https://github.com/ahammednibras8/flutter-chat-app/graphs/commit-activity)
 -->
-
 ---
 
 ## **Features**
@@ -140,4 +139,5 @@ This project is licensed under the MIT License. -->
 
 ## **About the Developer**
 
-Made with ❤️ by [Ahammed Nibras](https://github.com/ahammednibras81).
+Made with ❤️ by [Ahammed Nibras](https://github.com/ahammednibras8).
+
