@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_chat_app/core/app_theme.dart';
-// import 'package:flutter_chat_app/screens/chat_home_screen.dart';
+// import 'package:flutter_chat_app/screens/chat_screen.dart';
 import 'package:flutter_chat_app/screens/welcome_screen.dart';
 
 void main() {
@@ -16,7 +16,7 @@ class MainApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: AppTheme.lightTheme,
       home: const WelcomeScreen(),
-      // home: const ChatHomeScreen(),
+      // home: ChatScreen(),
     );
   }
 }

@@ -12,7 +12,7 @@ class ChatWidget extends StatelessWidget {
       onTap: () => Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => const ChatScreen(),
+          builder: (context) => ChatScreen(),
         ),
       ),
       child: Padding(
