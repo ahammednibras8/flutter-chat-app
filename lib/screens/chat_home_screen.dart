@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_chat_app/core/app_colors.dart';
 import 'package:flutter_chat_app/screens/accounts_screen.dart';
 import 'package:flutter_chat_app/screens/contacts_screen.dart';
+import 'package:flutter_chat_app/screens/settings_screen.dart';
 import 'package:flutter_chat_app/widgets/chat_widget.dart';
 import 'package:flutter_chat_app/widgets/my_appbar.dart';
 import 'package:flutter_chat_app/widgets/my_bottom_navigation.dart';
@@ -51,21 +52,41 @@ class ChatMainScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const MyAppbar(
+      appBar: MyAppbar(
         title: 'Chats',
         actions: [
-          Icon(
-            Icons.person_add_alt_1_outlined,
-            color: AppColors.active,
-            size: 28,
+          IconButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const ContactsScreen(),
+                ),
+              );
+            },
+            icon: const Icon(
+              Icons.person_add_alt_1_outlined,
+              color: AppColors.active,
+              size: 28,
+            ),
           ),
-          SizedBox(width: 12),
-          Icon(
-            Icons.settings_outlined,
-            color: AppColors.active,
-            size: 28,
+          const SizedBox(width: 12),
+          IconButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const SettingsScreen(),
+                ),
+              );
+            },
+            icon: const Icon(
+              Icons.settings_outlined,
+              color: AppColors.active,
+              size: 28,
+            ),
           ),
-          SizedBox(width: 16),
+          const SizedBox(width: 16),
         ],
       ),
       body: Column(
