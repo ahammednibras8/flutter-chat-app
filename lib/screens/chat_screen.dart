@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_chat_app/core/app_colors.dart';
 import 'package:flutter_chat_app/core/app_typography.dart';
 import 'package:flutter_chat_app/model/messages_model.dart';
