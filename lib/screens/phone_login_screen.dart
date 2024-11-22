@@ -7,6 +7,9 @@ import 'package:flutter_chat_app/widgets/my_appbar.dart';
 import 'package:flutter_chat_app/widgets/my_button.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
 
+import 'package:flutter_chat_app/providers/auth_providers.dart';
+import 'package:provider/provider.dart';
+
 class PhoneLoginScreen extends StatefulWidget {
   const PhoneLoginScreen({super.key});
 
@@ -16,50 +19,70 @@ class PhoneLoginScreen extends StatefulWidget {
 
 class _PhoneLoginScreenState extends State<PhoneLoginScreen> {
   String phoneNumber = '';
+
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () => FocusScope.of(context).unfocus(),
-      child: Scaffold(
-        appBar: const MyAppbar(
-          leadingIcon: Icon(Icons.arrow_back_ios_new_rounded),
-        ),
-        body: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 32),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              const LoginInfoText(
-                title: "Enter Your Phone Number",
-                subtitle:
-                    "Please confirm your country code and enter your phone number",
-              ),
-              const SizedBox(height: 48),
-              PhoneInputText(
-                onPhoneNumberChanged: (value) {
-                  setState(() {
-                    phoneNumber = value;
-                  });
-                },
-              ),
-              const SizedBox(height: 81),
-              MyButton(
-                text: 'Continue',
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => OtpValidationScreen(
-                        phoneNumber: phoneNumber,
+    return Consumer<AuthProviders>(
+      builder: (context, authProviders, _) {
+        return GestureDetector(
+          onTap: () => FocusScope.of(context).unfocus(),
+          child: Scaffold(
+            appBar: const MyAppbar(
+              leadingIcon: Icon(Icons.arrow_back_ios_new_rounded),
+            ),
+            body: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 32),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  const LoginInfoText(
+                    title: "Enter Your Phone Number",
+                    subtitle:
+                        "Please confirm your country code and enter your phone number",
+                  ),
+                  const SizedBox(height: 48),
+                  PhoneInputText(
+                    onPhoneNumberChanged: (value) {
+                      setState(() {
+                        phoneNumber = value;
+                      });
+                    },
+                  ),
+                  const SizedBox(height: 81),
+                  if (authProviders.error != null)
+                    Text(
+                      authProviders.error!,
+                      style: AppTypography.body2.copyWith(
+                        color: AppColors.danger,
                       ),
                     ),
-                  );
-                },
+                  MyButton(
+                    text: authProviders.isLoading ? 'Sending...' : 'Continue',
+                    onPressed: authProviders.isLoading
+                        ? () {}
+                        : () {
+                            authProviders.verifyPhone(
+                              phoneNumber: phoneNumber,
+                              onCodeSent: (verificationId) {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => OtpValidationScreen(
+                                      phoneNumber: phoneNumber,
+                                      verificationId: verificationId,
+                                    ),
+                                  ),
+                                );
+                              },
+                            );
+                          },
+                  ),
+                ],
               ),
-            ],
+            ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 }

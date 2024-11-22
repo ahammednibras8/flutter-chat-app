@@ -1,34 +1,64 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_chat_app/core/app_colors.dart';
 import 'package:flutter_chat_app/core/app_typography.dart';
+import 'package:flutter_chat_app/providers/auth_providers.dart';
 import 'package:flutter_chat_app/screens/profile_screen.dart';
 import 'package:flutter_chat_app/widgets/login_info_text.dart';
 import 'package:flutter_chat_app/widgets/my_appbar.dart';
+import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class OtpValidationScreen extends StatelessWidget {
   final String phoneNumber;
+  final String verificationId;
   final List<TextEditingController> _controllers =
       List.generate(6, (index) => TextEditingController());
 
-  OtpValidationScreen({super.key, required this.phoneNumber});
+  OtpValidationScreen({
+    super.key,
+    required this.phoneNumber,
+    required this.verificationId,
+  });
 
-  void validateOtp(BuildContext context) {
+  void validateOtp(BuildContext context) async {
     String otp = _controllers.map((controller) => controller.text).join();
 
-    if (otp == '954499') {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-          builder: (context) => const ProfileScreen(),
-        ),
-      );
-    } else {
+    if (otp.length != 6) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text("Invalid OTP"),
+          content: Text(
+            'Please enter a valid OTP',
+          ),
         ),
       );
+      return;
+    }
+
+    try {
+      final authProviders = Provider.of<AuthProviders>(context, listen: false);
+      await authProviders.verifyOTP(
+        verificationId: verificationId,
+        smsCode: otp,
+      );
+
+      if (context.mounted) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const ProfileScreen(),
+          ),
+        );
+      }
+    } catch (e) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              e.toString(),
+            ),
+          ),
+        );
+      }
     }
   }
 
