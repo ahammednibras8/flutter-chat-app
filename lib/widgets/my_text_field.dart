@@ -4,13 +4,33 @@ import 'package:flutter_chat_app/core/app_typography.dart';
 
 class MyTextField extends StatelessWidget {
   final String label;
-  const MyTextField({super.key, required this.label});
+  final TextEditingController? controller;
+  final ValueChanged<String>? onChanged;
+  final TextInputType? keyboardType;
+  final String? Function(String?)? validator;
+  final TextInputAction? textInputAction;
+
+  const MyTextField({
+    super.key,
+    required this.label,
+    this.controller,
+    this.onChanged,
+    this.keyboardType,
+    this.validator,
+    this.textInputAction,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 12),
-      child: TextField(
+      child: TextFormField(
+        controller: controller,
+        onChanged: onChanged,
+        keyboardType: keyboardType,
+        validator: validator,
+        textInputAction: textInputAction,
+        style: AppTypography.body1,
         decoration: InputDecoration(
           filled: true,
           fillColor: AppColors.offWhite,
@@ -37,6 +57,22 @@ class MyTextField extends StatelessWidget {
               width: 1.8,
             ),
             borderRadius: BorderRadius.circular(4),
+          ),
+          errorBorder: OutlineInputBorder(
+            borderSide: const BorderSide(
+              color: AppColors.danger,
+            ),
+            borderRadius: BorderRadius.circular(4),
+          ),
+          focusedErrorBorder: OutlineInputBorder(
+            borderSide: const BorderSide(
+              color: AppColors.danger,
+              width: 1.8,
+            ),
+            borderRadius: BorderRadius.circular(4),
+          ),
+          errorStyle: AppTypography.metadata1.copyWith(
+            color: AppColors.danger,
           ),
         ),
       ),
