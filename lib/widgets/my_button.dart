@@ -4,8 +4,13 @@ import 'package:flutter_chat_app/core/app_typography.dart';
 
 class MyButton extends StatelessWidget {
   final String text;
-  final VoidCallback onPressed;
-  const MyButton({super.key, required this.text, required this.onPressed});
+  final VoidCallback? onPressed;
+  
+  const MyButton({
+    super.key,
+    required this.text,
+    this.onPressed,
+  });
 
   @override
   Widget build(BuildContext context) {

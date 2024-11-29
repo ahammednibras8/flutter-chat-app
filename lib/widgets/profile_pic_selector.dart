@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_chat_app/core/app_colors.dart';
-import 'package:flutter_chat_app/core/app_typography.dart';
 import 'package:image_picker/image_picker.dart';
 
 class ProfilePicSelector extends StatefulWidget {
