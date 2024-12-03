@@ -1,8 +1,6 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_chat_app/core/app_colors.dart';
-import 'package:flutter_chat_app/core/app_typography.dart';
 import 'package:flutter_chat_app/providers/user_provider.dart';
 import 'package:flutter_chat_app/screens/chat_home_screen.dart';
 import 'package:flutter_chat_app/widgets/my_appbar.dart';
@@ -23,6 +21,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   final TextEditingController _lastNameController = TextEditingController();
   File? _selectedImage;
   bool _isLoading = false;
+  // ignore: unused_field
   String? _errorMessage;
 
   @override

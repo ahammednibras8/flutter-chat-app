@@ -1,18 +1,40 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_chat_app/core/app_colors.dart';
 import 'package:flutter_chat_app/core/app_typography.dart';
+import 'package:flutter_chat_app/model/chat_model.dart';
 import 'package:flutter_chat_app/screens/chat_screen.dart';
 
 class ChatWidget extends StatelessWidget {
-  const ChatWidget({super.key});
+  final ChatModel chat;
+  final String currentUserId;
+
+  const ChatWidget({
+    super.key,
+    required this.chat,
+    required this.currentUserId,
+  });
+
+  String _formatTime(DateTime time) {
+    final now = DateTime.now();
+    if (time.year == now.year &&
+        time.month == now.month &&
+        time.day == now.day) {
+      return '${time.day.toString().padLeft(2, '0')}:${time.minute.toString().padLeft(2, '0')}';
+    }
+    return '${time.day}/${time.month}';
+  }
 
   @override
   Widget build(BuildContext context) {
+    final isLastMessageMine = chat.lastMessageSenderId == currentUserId;
+    final otherParticipats =
+        chat.participants.firstWhere((id) => id != currentUserId);
+
     return GestureDetector(
       onTap: () => Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => ChatScreen(),
+          builder: (context) => ChatScreen(chatId: chat.id),
         ),
       ),
       child: Padding(
@@ -28,10 +50,21 @@ class ChatWidget extends StatelessWidget {
               ),
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(16),
-                child: Image.asset(
-                  'assets/images/profile.jpeg',
-                  fit: BoxFit.cover,
-                ),
+                child: chat.isGroup && chat.groupImage != null
+                    ? Image.network(
+                        chat.groupImage!,
+                        fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTree) => const Icon(
+                          Icons.group,
+                          size: 32,
+                          color: AppColors.active,
+                        ),
+                      )
+                    : const Icon(
+                        Icons.person,
+                        size: 32,
+                        color: AppColors.active,
+                      ),
               ),
             ),
             const SizedBox(width: 12),
@@ -43,28 +76,67 @@ class ChatWidget extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Ahammed Nibras',
+                        chat.isGroup
+                            ? chat.groupName ?? 'GroupChat'
+                            : otherParticipats,
                         style: AppTypography.body1.copyWith(
                           color: AppColors.active,
+                          fontWeight: chat.unreadCount > 0 && !isLastMessageMine
+                              ? FontWeight.bold
+                              : FontWeight.normal,
                         ),
                       ),
                       const SizedBox(height: 4),
-                      Text(
-                        'Good morning, did you sleep well?',
-                        style: AppTypography.metadata1.copyWith(
-                          color: AppColors.disabled,
-                        ),
-                      )
+                      Row(
+                        children: [
+                          if (isLastMessageMine)
+                            const Padding(
+                              padding: EdgeInsets.only(right: 4),
+                              child: Icon(
+                                Icons.done_all,
+                                size: 16,
+                                color: AppColors.disabled,
+                              ),
+                            ),
+                          Text(
+                            chat.lastMessage,
+                            style: AppTypography.metadata1.copyWith(
+                              color: chat.unreadCount > 0 && !isLastMessageMine
+                                  ? AppColors.active
+                                  : AppColors.disabled,
+                            ),
+                          ),
+                        ],
+                      ),
                     ],
                   ),
                   Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
                       Text(
-                        'Today',
+                        _formatTime(chat.lastMessageTime),
                         style: AppTypography.metadata2.copyWith(
-                          color: AppColors.disabled,
+                          color: chat.unreadCount > 0 && !isLastMessageMine
+                              ? AppColors.active
+                              : AppColors.disabled,
                         ),
                       ),
+                      if (chat.unreadCount > 0 && !isLastMessageMine) ...[
+                        const SizedBox(height: 4),
+                        Container(
+                          padding: const EdgeInsets.all(6),
+                          decoration: const BoxDecoration(
+                            color: AppColors.defaultColor,
+                            shape: BoxShape.circle,
+                          ),
+                          child: Text(
+                            chat.unreadCount.toString(),
+                            style: AppTypography.metadata2.copyWith(
+                              color: AppColors.white,
+                            ),
+                          ),
+                        ),
+                      ]
                     ],
                   )
                 ],

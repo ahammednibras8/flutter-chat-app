@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_chat_app/core/app_theme.dart';
 import 'package:flutter_chat_app/firebase_options.dart';
 import 'package:flutter_chat_app/providers/auth_providers.dart';
+import 'package:flutter_chat_app/providers/chat_provider.dart';
 import 'package:flutter_chat_app/providers/user_provider.dart';
 import 'package:flutter_chat_app/screens/welcome_screen.dart';
 import 'package:provider/provider.dart';
@@ -45,7 +46,10 @@ class MainApp extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (_) => UserProvider(),
-        )
+        ),
+        ChangeNotifierProvider(
+          create: (_) => ChatProvider(),
+        ),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

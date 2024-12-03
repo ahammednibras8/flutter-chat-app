@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_chat_app/core/app_colors.dart';
+import 'package:flutter_chat_app/screens/chat_home_screen.dart';
 import 'package:flutter_chat_app/widgets/chat_widget.dart';
 import 'package:flutter_chat_app/widgets/my_appbar.dart';
 import 'package:flutter_chat_app/widgets/my_text_field.dart';
@@ -32,7 +33,8 @@ class ContactsScreen extends StatelessWidget {
               child: ListView.builder(
                 itemCount: 6,
                 itemBuilder: (context, index) {
-                  return const ChatWidget();
+                  //TODO: implement
+                  return const ChatHomeScreen();
                 },
               ),
             ),

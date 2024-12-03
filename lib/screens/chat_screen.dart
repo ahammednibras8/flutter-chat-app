@@ -5,6 +5,7 @@ import 'package:flutter_chat_app/model/messages_model.dart';
 import 'package:flutter_chat_app/widgets/my_appbar.dart';
 
 class ChatScreen extends StatelessWidget {
+  final String chatId;
   final List<MessagesModel> _messages = [
     MessagesModel(
       text: "Hey, how are you?",
@@ -22,7 +23,7 @@ class ChatScreen extends StatelessWidget {
       time: "10:32 AM",
     ),
   ];
-  ChatScreen({super.key});
+  ChatScreen({super.key, required this.chatId});
 
   @override
   Widget build(BuildContext context) {
