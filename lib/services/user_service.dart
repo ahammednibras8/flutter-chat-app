@@ -1,71 +1,91 @@
 import 'dart:io';
 
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_chat_app/model/user_model.dart';
 
 class UserService {
-  final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseStorage _storage = FirebaseStorage.instance;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
 
-  User? get currentUser => _auth.currentUser;
+  Future<UserModel?> getCurrentUser() async {
+    try {
+      final user = _auth.currentUser;
+      if (user == null) return null;
 
-  Future<String> uploadProfileImage(File image) async {
-    final user = currentUser;
-    if (user == null) throw Exception('No authenticated user found.');
+      final doc = await _firestore.collection('users').doc(user.uid).get();
+      if (!doc.exists) {
+        // Create initial user document if it doesn't exist
+        final initialUser = UserModel(
+          uid: user.uid,
+          firstName: user.displayName?.split(' ').first ?? '',
+          lastName: user.displayName?.split(' ').skip(1).join(' '),
+          phoneNumber: user.phoneNumber,
+          createdAt: DateTime.now(),
+          updatedAt: DateTime.now(),
+        );
 
-    final ref = _storage.ref().child('profile_images/@{user.uid}');
-    final uploadTask = await ref.putFile(image);
-    return await uploadTask.ref.getDownloadURL();
+        await _firestore
+            .collection('users')
+            .doc(user.uid)
+            .set(initialUser.toMap());
+        return initialUser;
+      }
+
+      return UserModel.fromMap({...doc.data()!, 'uid': user.uid});
+    } catch (e) {
+      print('Error getting user: $e');
+      return null;
+    }
   }
 
-  Future<void> updateUser({
+  Future<String?> uploadProfileImage(File image) async {
+    try {
+      final user = _auth.currentUser;
+      if (user == null) return null;
+
+      final ref = _storage
+          .ref()
+          .child('profile_images')
+          .child('${user.uid}_${DateTime.now().millisecondsSinceEpoch}.jpg');
+
+      await ref.putFile(image);
+      return await ref.getDownloadURL();
+    } catch (e) {
+      print('Error uploading profile image: $e');
+      return null;
+    }
+  }
+
+  Future<bool> updateProfile({
     required String firstName,
     String? lastName,
     File? profileImage,
   }) async {
-    final user = currentUser;
-    if (user == null) throw Exception('No authenticated user found.');
+    try {
+      final user = _auth.currentUser;
+      if (user == null) return false;
 
-    String? imageUrl;
-    if (profileImage != null) {
-      imageUrl = await uploadProfileImage(profileImage);
-    }
+      final updates = {
+        'firstName': firstName,
+        'lastName': lastName,
+        'updatedAt': FieldValue.serverTimestamp(),
+      };
 
-    final userDoc = await _firestore.collection('users').doc(user.uid).get();
-    final now = DateTime.now();
+      if (profileImage != null) {
+        final imageUrl = await uploadProfileImage(profileImage);
+        if (imageUrl != null) {
+          updates['profileImage'] = imageUrl;
+        }
+      }
 
-    if (!userDoc.exists) {
-      final newUser = UserModel(
-        uid: user.uid,
-        firstName: firstName,
-        lastName: lastName,
-        phoneNumber: user.phoneNumber ?? '',
-        profileImage: imageUrl,
-        createdAt: now,
-        updatedAt: now,
-      );
-
-      await _firestore.collection('users').doc(user.uid).set(newUser.toMap());
-    } else {
-      final data = userDoc.data()!;
-      final updatedUser = UserModel(
-        uid: user.uid,
-        firstName: firstName,
-        lastName: lastName,
-        phoneNumber: data['phoneNumber'] as String,
-        profileImage: imageUrl ?? data['profileImage'] as String?,
-        createdAt: (data['createdAt'] as Timestamp).toDate(),
-        updatedAt: now,
-      );
-
-      await _firestore
-          .collection('users')
-          .doc(user.uid)
-          .update(updatedUser.toMap());
+      await _firestore.collection('users').doc(user.uid).update(updates);
+      return true;
+    } catch (e) {
+      print('Error updating profile: $e');
+      return false;
     }
   }
 }

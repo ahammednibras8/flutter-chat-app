@@ -4,19 +4,19 @@ class UserModel {
   final String uid;
   final String firstName;
   final String? lastName;
-  final String phoneNumber;
+  final String? phoneNumber;
   final String? profileImage;
-  final DateTime createdAt;
-  final DateTime updatedAt;
+  final DateTime? createdAt;
+  final DateTime? updatedAt;
 
-  UserModel({
-    required this.createdAt,
+  const UserModel({
     required this.uid,
     required this.firstName,
     this.lastName,
-    required this.phoneNumber,
+    this.phoneNumber,
     this.profileImage,
-    required this.updatedAt,
+    this.createdAt,
+    this.updatedAt,
   });
 
   Map<String, dynamic> toMap() {
@@ -26,20 +26,41 @@ class UserModel {
       'lastName': lastName,
       'phoneNumber': phoneNumber,
       'profileImage': profileImage,
-      'createdAt': createdAt,
-      'updatedAt': updatedAt,
+      'createdAt': createdAt != null ? Timestamp.fromDate(createdAt!) : null,
+      'updatedAt': updatedAt != null ? Timestamp.fromDate(updatedAt!) : null,
     };
   }
 
   factory UserModel.fromMap(Map<String, dynamic> map) {
     return UserModel(
-      uid: map['uid'] as String,
-      firstName: map['firstName'] as String,
-      lastName: map['lastName'] as String?,
-      phoneNumber: map['phoneNumber'] as String,
-      profileImage: map['profileImage'] as String?,
-      createdAt: (map['createdAt'] as Timestamp).toDate(),
-      updatedAt: (map['updatedAt'] as Timestamp).toDate(),
+      uid: map['uid'] ?? '',
+      firstName: map['firstName'] ?? '',
+      lastName: map['lastName'],
+      phoneNumber: map['phoneNumber'],
+      profileImage: map['profileImage'],
+      createdAt: map['createdAt'] != null
+          ? (map['createdAt'] as Timestamp).toDate()
+          : null,
+      updatedAt: map['updatedAt'] != null
+          ? (map['updatedAt'] as Timestamp).toDate()
+          : null,
+    );
+  }
+
+  UserModel copyWith({
+    String? firstName,
+    String? lastName,
+    String? phoneNumber,
+    String? profileImage,
+  }) {
+    return UserModel(
+      uid: uid,
+      firstName: firstName ?? this.firstName,
+      lastName: lastName ?? this.lastName,
+      phoneNumber: phoneNumber ?? this.phoneNumber,
+      profileImage: profileImage ?? this.profileImage,
+      createdAt: createdAt,
+      updatedAt: DateTime.now(),
     );
   }
 }

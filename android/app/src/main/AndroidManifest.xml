@@ -23,6 +23,10 @@
               android:name="io.flutter.embedding.android.NormalTheme"
               android:resource="@style/NormalTheme"
               />
+            <meta-data
+              android:name="firebase_app_check_debug_token"
+              android:value="2dded9c0-5ef5-4f0c-9258-151f6a9efd64"
+              />
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
