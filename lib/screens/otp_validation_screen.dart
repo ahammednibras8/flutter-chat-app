@@ -1,32 +1,55 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_chat_app/core/app_colors.dart';
 import 'package:flutter_chat_app/core/app_typography.dart';
+import 'package:flutter_chat_app/provider/auth_provider.dart';
 import 'package:flutter_chat_app/screens/profile_screen.dart';
 import 'package:flutter_chat_app/widgets/login_info_text.dart';
 import 'package:flutter_chat_app/widgets/my_appbar.dart';
+import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class OtpValidationScreen extends StatelessWidget {
+class OtpValidationScreen extends StatefulWidget {
   final String phoneNumber;
-  final List<TextEditingController> _controllers =
-      List.generate(6, (index) => TextEditingController());
+  final String verificationId;
 
-  OtpValidationScreen({super.key, required this.phoneNumber});
+  const OtpValidationScreen({
+    super.key,
+    required this.phoneNumber,
+    required this.verificationId,
+  });
 
-  void validateOtp(BuildContext context) {
+  @override
+  State<OtpValidationScreen> createState() => _OtpValidationScreenState();
+}
+
+class _OtpValidationScreenState extends State<OtpValidationScreen> {
+  final List<TextEditingController> _controllers = List.generate(
+    6,
+    (index) => TextEditingController(),
+  );
+
+  void validateOtp(BuildContext context) async {
     String otp = _controllers.map((controller) => controller.text).join();
 
-    if (otp == '954499') {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-          builder: (context) => const ProfileScreen(),
-        ),
+    final authProvider = Provider.of<AuthProvider>(context, listen: false);
+
+    try {
+      await authProvider.verifyOtp(
+        widget.verificationId,
+        otp,
+        () {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const ProfileScreen(),
+            ),
+          );
+        },
       );
-    } else {
+    } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text("Invalid OTP"),
+        SnackBar(
+          content: Text('Invalid OTP: $e'),
         ),
       );
     }
@@ -49,7 +72,7 @@ class OtpValidationScreen extends StatelessWidget {
                 LoginInfoText(
                   title: 'Enter Code',
                   subtitle:
-                      'We have sent you an SMS with the code to $phoneNumber',
+                      'We have sent you an SMS with the code to ${widget.phoneNumber}',
                 ),
                 OtpInputField(
                   controllers: _controllers,

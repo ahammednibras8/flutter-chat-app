@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_chat_app/core/app_colors.dart';
 import 'package:flutter_chat_app/core/app_typography.dart';
+import 'package:flutter_chat_app/provider/auth_provider.dart';
 import 'package:flutter_chat_app/screens/otp_validation_screen.dart';
 import 'package:flutter_chat_app/widgets/login_info_text.dart';
 import 'package:flutter_chat_app/widgets/my_appbar.dart';
 import 'package:flutter_chat_app/widgets/my_button.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
+import 'package:provider/provider.dart';
 
 class PhoneLoginScreen extends StatefulWidget {
   const PhoneLoginScreen({super.key});
@@ -18,6 +20,8 @@ class _PhoneLoginScreenState extends State<PhoneLoginScreen> {
   String phoneNumber = '';
   @override
   Widget build(BuildContext context) {
+    final authProvider = Provider.of<AuthProvider>(context);
+
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
@@ -44,16 +48,39 @@ class _PhoneLoginScreenState extends State<PhoneLoginScreen> {
               ),
               const SizedBox(height: 81),
               MyButton(
-                text: 'Continue',
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => OtpValidationScreen(
-                        phoneNumber: phoneNumber,
+                text: authProvider.isLoading ? 'Sending OTP' : 'Continue',
+                onPressed: () async {
+                  if (phoneNumber.isEmpty) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text("Please Enter a Number"),
                       ),
-                    ),
-                  );
+                    );
+                  }
+
+                  try {
+                    await authProvider.sendOtp(
+                      phoneNumber,
+                      (verificationId) {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => OtpValidationScreen(
+                              phoneNumber: phoneNumber,
+                              verificationId: verificationId,
+                            ),
+                          ),
+                        );
+                      },
+                    );
+                  } catch (e) {
+                    print(e);
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text('Error: $e'),
+                      ),
+                    );
+                  }
                 },
               ),
             ],
