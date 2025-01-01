@@ -1,16 +1,15 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
   Future<void> sentOtp(String phoneNumber, Function onCodeSent) async {
     if (phoneNumber.isEmpty || !phoneNumber.startsWith('+')) {
-      print("Invalid phone number");
+      debugPrint("Invalid phone number");
       throw Exception(
           "Phone number must be in international format and not empty");
     }
-
-    print("Sending OTP to: $phoneNumber");
 
     await _auth.verifyPhoneNumber(
       phoneNumber: phoneNumber,
@@ -24,7 +23,7 @@ class AuthService {
         onCodeSent(verificationId);
       },
       codeAutoRetrievalTimeout: (String verificationId) {
-        print(
+        debugPrint(
           "Verification timeout occurred. Verification ID: $verificationId",
         );
       },

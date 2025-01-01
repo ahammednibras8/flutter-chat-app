@@ -4,13 +4,20 @@ import 'package:flutter_chat_app/core/app_typography.dart';
 
 class MyTextField extends StatelessWidget {
   final String label;
-  const MyTextField({super.key, required this.label});
+  final TextEditingController? controller;
+
+  const MyTextField({
+    super.key,
+    required this.label,
+    this.controller,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 12),
       child: TextField(
+        controller: controller,
         decoration: InputDecoration(
           filled: true,
           fillColor: AppColors.offWhite,

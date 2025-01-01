@@ -2,6 +2,8 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_chat_app/core/app_theme.dart';
+import 'package:flutter_chat_app/provider/user_provider.dart';
+import 'package:flutter_chat_app/screens/profile_screen.dart';
 import 'package:flutter_chat_app/screens/welcome_screen.dart';
 import 'package:flutter_chat_app/provider/auth_provider.dart';
 import 'package:provider/provider.dart';
@@ -27,6 +29,7 @@ class MainApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => AuthProvider()),
+        ChangeNotifierProvider(create: (_) => UserProvider()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
@@ -39,7 +42,8 @@ class MainApp extends StatelessWidget {
             child: child!,
           );
         },
-        home: const WelcomeScreen(),
+        home: const ProfileScreen(),
+        // home: const WelcomeScreen(),
       ),
     );
   }

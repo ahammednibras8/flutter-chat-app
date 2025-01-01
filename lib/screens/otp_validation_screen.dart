@@ -31,6 +31,9 @@ class _OtpValidationScreenState extends State<OtpValidationScreen> {
   void validateOtp(BuildContext context) async {
     String otp = _controllers.map((controller) => controller.text).join();
 
+    final navigator = Navigator.of(context);
+    final scaffoldMessenger = ScaffoldMessenger.of(context);
+
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
 
     try {
@@ -38,20 +41,23 @@ class _OtpValidationScreenState extends State<OtpValidationScreen> {
         widget.verificationId,
         otp,
         () {
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-              builder: (context) => const ProfileScreen(),
-            ),
-          );
+          if (mounted) {
+            navigator.pushReplacement(
+              MaterialPageRoute(
+                builder: (context) => const ProfileScreen(),
+              ),
+            );
+          }
         },
       );
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Invalid OTP: $e'),
-        ),
-      );
+      if (mounted) {
+        scaffoldMessenger.showSnackBar(
+          SnackBar(
+            content: Text('Invalid OTP: $e'),
+          ),
+        );
+      }
     }
   }
 

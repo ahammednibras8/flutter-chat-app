@@ -20,6 +20,8 @@ class _PhoneLoginScreenState extends State<PhoneLoginScreen> {
   String phoneNumber = '';
   @override
   Widget build(BuildContext context) {
+    final scaffoldMessenger = ScaffoldMessenger.of(context);
+
     final authProvider = Provider.of<AuthProvider>(context);
 
     return GestureDetector(
@@ -74,12 +76,14 @@ class _PhoneLoginScreenState extends State<PhoneLoginScreen> {
                       },
                     );
                   } catch (e) {
-                    print(e);
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text('Error: $e'),
-                      ),
-                    );
+                    debugPrint('$e');
+                    if (mounted) {
+                      scaffoldMessenger.showSnackBar(
+                        SnackBar(
+                          content: Text('Error: $e'),
+                        ),
+                      );
+                    }
                   }
                 },
               ),
