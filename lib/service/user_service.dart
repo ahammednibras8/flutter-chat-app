@@ -1,42 +1,26 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
+import 'dart:io';
+
 import 'package:flutter_chat_app/model/user_model.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class UserService {
-  final FirebaseAuth _auth = FirebaseAuth.instance;
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final SupabaseClient _client = Supabase.instance.client;
 
-  User? get currentUser => _auth.currentUser;
-
-  Future<void> createUser(UserModel user) async {
-    try {
-      if (currentUser != null) {
-        await _firestore
-            .collection('user')
-            .doc(currentUser!.uid)
-            .set(user.toMap());
-      }
-    } catch (e) {
-      debugPrint('Error Creating/Updating User: $e');
-      rethrow;
-    }
+  Future<UserModel?> getUserData(String uid) async {
+    final response =
+        await _client.from('user').select().eq('uid', uid).single();
+    return UserModel.fromMap(response);
   }
 
-  Future<UserModel?> getUserData() async {
-    try {
-      if (currentUser != null) {
-        final doc =
-            await _firestore.collection('user').doc(currentUser!.uid).get();
-        if (doc.exists) {
-          return UserModel.fromMap(doc.data()!, doc.id);
-        }
-      }
-    } catch (e) {
-      debugPrint('Error fetching Data: $e');
-      rethrow;
-    }
+  Future<void> saveUserData(UserModel user) async {
+    await _client.from('users').upsert(user.toMap());
+  }
 
-    return null;
+  Future<String> uploadProfilePicture(File file) async {
+    final fileName = file.path.split('/').last;
+
+    final publicUrl =
+        _client.storage.from('profile-pics').getPublicUrl(fileName);
+    return publicUrl;
   }
 }

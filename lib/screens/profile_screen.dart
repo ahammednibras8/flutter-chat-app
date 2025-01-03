@@ -1,5 +1,6 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
-import 'package:flutter_chat_app/model/user_model.dart';
 import 'package:flutter_chat_app/provider/user_provider.dart';
 import 'package:flutter_chat_app/screens/chat_home_screen.dart';
 import 'package:flutter_chat_app/widgets/my_appbar.dart';
@@ -18,41 +19,23 @@ class ProfileScreen extends StatefulWidget {
 class _ProfileScreenState extends State<ProfileScreen> {
   final _firstNameController = TextEditingController();
   final _lastNameController = TextEditingController();
-  bool _isInitialized = false;
+  File? _profileImage;
 
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
-      await _loadUserData();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final user = context.read<UserProvider>().user;
+      if (user != null) {
+        _firstNameController.text = user.firstName;
+        _lastNameController.text = user.lastName;
+      }
     });
-  }
-
-  Future<void> _loadUserData() async {
-    final userProvider = context.read<UserProvider>();
-    await userProvider.loadUserData();
-    final user = userProvider.user;
-
-    if (user != null && !_isInitialized) {
-      _firstNameController.text = user.firstName;
-      _lastNameController.text = user.lastName;
-      setState(() {
-        _isInitialized = true;
-      });
-    }
-  }
-
-  @override
-  void dispose() {
-    _firstNameController.dispose();
-    _lastNameController.dispose();
-    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     final userProvider = context.watch<UserProvider>();
-    final user = userProvider.user;
 
     final navigator = Navigator.of(context);
 
@@ -69,7 +52,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
             child: Column(
               children: [
                 const SizedBox(height: 48),
-                const ProfilePicSelector(),
+                ProfilePicSelector(
+                  onImageSelected: (file) {
+                    _profileImage = file;
+                  },
+                ),
                 const SizedBox(height: 31),
                 MyTextField(
                   label: "First Name (Required)",
@@ -84,14 +71,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 MyButton(
                   text: 'Save',
                   onPressed: () async {
-                    print('$_firstNameController.text');
-                    print('$_lastNameController.text');
-                    final userModel = UserModel(
-                      firstName: _firstNameController.text,
-                      lastName: _lastNameController.text,
-                      uid: userProvider.user?.uid ?? '',
+                    final user = userProvider.user;
+
+                    final updatedUser = user.copyWith(
+                      firstName: _firstNameController.text.trim(),
+                      lastName: _lastNameController.text.trim(),
+                      profilePicUrl: _profileImage?.path ?? user.profilePicUrl,
                     );
-                    await userProvider.saveUserData(userModel);
+
+                    await userProvider.saveUserData(updatedUser);
+
                     if (mounted) {
                       navigator.pushReplacement(
                         MaterialPageRoute(

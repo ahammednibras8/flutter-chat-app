@@ -4,13 +4,19 @@ import 'package:flutter/services.dart';
 import 'package:flutter_chat_app/core/app_theme.dart';
 import 'package:flutter_chat_app/provider/user_provider.dart';
 import 'package:flutter_chat_app/screens/profile_screen.dart';
-import 'package:flutter_chat_app/screens/welcome_screen.dart';
 import 'package:flutter_chat_app/provider/auth_provider.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+  await dotenv.load();
+  await Supabase.initialize(
+    url: dotenv.env['SUPABASE-URL'] ?? '',
+    anonKey: dotenv.env['SUPABASE_ANON_KEY'] ?? '',
+  );
 
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(

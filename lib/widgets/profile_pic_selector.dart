@@ -6,7 +6,9 @@ import 'package:flutter_chat_app/core/app_typography.dart';
 import 'package:image_picker/image_picker.dart';
 
 class ProfilePicSelector extends StatefulWidget {
-  const ProfilePicSelector({super.key});
+  final Function(File imageFile)? onImageSelected;
+
+  const ProfilePicSelector({super.key, this.onImageSelected});
 
   @override
   State<ProfilePicSelector> createState() => _ProfilePicSelectorState();
@@ -14,19 +16,16 @@ class ProfilePicSelector extends StatefulWidget {
 
 class _ProfilePicSelectorState extends State<ProfilePicSelector> {
   File? _image;
-  final ImagePicker _picker = ImagePicker();
 
   Future<void> _pickImage(ImageSource source) async {
-    try {
-      final XFile? pickedFile = await _picker.pickImage(source: source);
+    final XFile? pickedFile = await ImagePicker().pickImage(source: source);
 
-      if (pickedFile != null) {
-        setState(() {
-          _image = File(pickedFile.path);
-        });
-      }
-    } catch (e) {
-      debugPrint('Error picking image: $e');
+    if (pickedFile != null) {
+      setState(() {
+        _image = File(pickedFile.path);
+      });
+
+      widget.onImageSelected?.call(_image!);
     }
   }
 
